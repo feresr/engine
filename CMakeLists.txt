@@ -72,3 +72,7 @@ target_include_directories(engine
 
 # SDL and glad should be PRIVATE
 target_link_libraries(engine PUBLIC glm SDL2-static spdlog glad PRIVATE tmxlite stb)
+
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/bin/${CMAKE_BUILD_TYPE}/")
+add_subdirectory(sandbox)
