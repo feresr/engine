@@ -1,7 +1,3 @@
-//
-// Created by Fernando Raviola on 19/02/2021.
-//
-
 #include "FrameBuffer.h"
 #include "Log.h"
 #include <glad/glad.h>
@@ -62,19 +58,16 @@ Engine::FrameBuffer::FrameBuffer(int width, int height, const Engine::TextureFor
     for (int i = 0; i < attachmentCount; i++)
     {
         auto tex = Texture::create(width, height, textureFormats[i]);
-        auto *glTexture = tex.get();
-
-        glTexture->framebufferParent = true;
+        tex->framebufferParent = true;
         mAttachments.push_back(tex);
 
         if (textureFormats[i] != TextureFormat::DepthStencil)
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, glTexture->getId(), 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, tex->getId(), 0);
         }
         else
         {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D,
-                                   glTexture->getId(), 0);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, tex->getId(), 0);
         }
     }
 }

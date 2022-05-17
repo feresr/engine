@@ -25,10 +25,9 @@ void Engine::SpriteComponent::play(const std::string &animationName)
     }
 }
 
-void Engine::SpriteComponent::render(Engine::Batch &batch)
-{
+void Engine::SpriteComponent::render(Engine::Batch &batch) {
     auto &texture = getAnimation()->frames[frameIndex].texture;
-    batch.pushMatrix(Engine::Math::transform(entity->position, getSprite()->pivot, scale));
+    batch.pushMatrix(Engine::Math::transform(entity->position, getSprite()->pivot, scale, entity->rotation));
     batch.tex(texture, glm::vec2(0), Engine::Color(0xffffff));
     batch.popMatrix();
 }

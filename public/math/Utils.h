@@ -14,5 +14,7 @@ namespace Engine::Math {
         return x < 0.5 ? 4 * x * x * x : 1 - pow(-2 * x + 2, 3) / 2;
     }
 
+    glm::mat3x2 transform(const glm::vec2 &position, const glm::vec2 &origin, const glm::vec2 &scale, float radians);
     glm::mat3x2 transform(const glm::vec2 &position, const glm::vec2 &origin, const glm::vec2 &scale);
+    glm::mat3x2 rotate(float radians);
 }

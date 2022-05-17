@@ -37,6 +37,7 @@ namespace Engine
         std::vector<Component *> &getComponents();
 
         glm::ivec2 position;
+        float rotation = 0.0f;
 
         [[nodiscard]] const std::vector<Component *> &getComponents() const;
 

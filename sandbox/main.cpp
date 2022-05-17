@@ -1,26 +1,57 @@
 #include "Engine.h"
+#include "Background.h"
+#include "Bird.h"
 
-class SandboxApplication : public Engine::Application {
-
-    public:
+class SandboxApplication : public Engine::Application
+{
+private:
     Engine::Batch batch;
+    static constexpr int WIDTH = 288;
+    static constexpr int HEIGHT = 512;
+    static constexpr float SCALE = 1.7;
 
-    SandboxApplication() : Engine::Application("Flappy Bird", 800, 600, false){}
+    std::shared_ptr<Engine::FrameBuffer> buffer;
+    Engine::Entity* player;
 
-    void update() override {
+public:
+    SandboxApplication() : Engine::Application("Flappy Bird", WIDTH * SCALE, HEIGHT * SCALE, false)
+    {
+        buffer = Engine::FrameBuffer::create(WIDTH, HEIGHT);
+        batch.defaultSampler = Engine::TextureSampler(Engine::TextureFilter::Nearest);
+
+        world.addEntity({0.0f, 0.0f})->add<Background>(WIDTH, HEIGHT);
+
+        player = world.addEntity({80.0f, HEIGHT / 2.0f});
+        player->add<Bird>();
     }
 
-    void render() override {
-        auto time = Engine::Time::getTime() / 1000.0f;
-        static auto color = Engine::Color(0xff000000);
-        color.r = sinf(time * .2) * 255;
-        color.g = sinf(time * .4) * 255;
-        color.b = sinf(time * .3) * 255;
-        Engine::FrameBuffer::BackBuffer()->clear(color);
+    void update() override
+    {
+        world.update();
     }
 
-    void handleEvent(SDL_Event &event) override {
+    void render() override
+    {
+        Engine::FrameBuffer::BackBuffer()->clear(0x000000);
+        world.render<Background>(batch);
+        world.render<Engine::SpriteComponent>(batch);
+        batch.render(buffer);
+        batch.clear();
 
+        // Render to screen
+        auto screenBuffer = Engine::FrameBuffer::BackBuffer();
+        glm::vec2 screenCenter = glm::vec2{(float)screenBuffer->width(), (float)screenBuffer->height()} * 0.5f;
+        glm::vec2 bufferCenter = glm::vec2{(float)buffer->width(), (float)buffer->height()} * 0.5f;
+        glm::vec2 scale = {screenBuffer->width() / (float)buffer->width(), screenBuffer->height() / (float)buffer->height()};
+        batch.pushMatrix(Engine::Math::transform(screenCenter, bufferCenter, scale));
+        batch.tex(buffer->attachment(0), {0.0f, 0.0f}, 0xffffff);
+        batch.render(Engine::FrameBuffer::BackBuffer());
+        batch.popMatrix();
+        batch.clear();
+    }
+
+    void handleEvent(SDL_Event &event) override
+    {
     }
 };
 

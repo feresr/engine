@@ -16,7 +16,7 @@ public:
 
     explicit ColliderComponent(Engine::RectI &rect);
 
-    explicit ColliderComponent(int width, int height, int tileSize);
+    explicit ColliderComponent(int columns, int rows, int tileSize);
 
     bool overlaps(const ColliderComponent &other);
 

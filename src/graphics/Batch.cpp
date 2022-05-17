@@ -166,9 +166,7 @@ namespace Engine
         if (m_currentBatch.texture != texture)
         {
             m_currentBatch.texture = texture;
-            // todo: is this needed?
-            // m_batch.flip_vertically =
-            // App::renderer_features().origin_bottom_left && texture && texture->is_framebuffer();
+            m_currentBatch.flipVertically = texture->isFramebuffer();
         }
     }
 
@@ -209,7 +207,8 @@ namespace Engine
         {
             if (!m_mesh)
                 m_mesh = std::shared_ptr<Mesh>{new Mesh()};
-            if (!mDefaultMaterial) {
+            if (!mDefaultMaterial)
+            {
                 auto mDefaultShader = std::shared_ptr<Shader>(new Shader(shader_data));
                 mDefaultMaterial = std::shared_ptr<Material>(new Material(mDefaultShader));
             }
@@ -419,6 +418,7 @@ namespace Engine
             glm::vec2(texture->getWidth(), 0.0f),
             glm::vec2{texture->getWidth(), texture->getHeight()},
             glm::vec2(0.0f, texture->getHeight())};
+
         glm::vec2 uvs[4]{
             {0.0f, 0.0f},
             {1.0f, 0.0f},
@@ -426,7 +426,14 @@ namespace Engine
             {0.0f, 1.0f},
         };
 
-        auto wash = m_color_mode == ColorMode::Wash   ? 255 : 0;
+        if (m_currentBatch.flipVertically)
+        {
+            for (int i = 0; i < 4; i++) {
+                uvs[i].y = 1.0 - uvs[i].y;
+            }
+        }
+
+        auto wash = m_color_mode == ColorMode::Wash ? 255 : 0;
         auto mult = m_color_mode == ColorMode::Normal ? 255 : 0;
         for (int i = 0; i < 4; i++)
         {
@@ -481,8 +488,14 @@ namespace Engine
             sprite.rect.bottom_right(),
             sprite.rect.bottom_left(),
         };
+        if (m_currentBatch.flipVertically)
+        {
+            for (int i = 0; i < 4; i++) {
+                uvs[i].y = 1.0 - uvs[i].y;
+            }
+        }
 
-        auto wash = m_color_mode == ColorMode::Wash   ? 255 : 0;
+        auto wash = m_color_mode == ColorMode::Wash ? 255 : 0;
         auto mult = m_color_mode == ColorMode::Normal ? 255 : 0;
         for (int i = 0; i < 4; i++)
         {

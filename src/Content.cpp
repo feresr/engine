@@ -14,6 +14,53 @@ using json = nlohmann::json;
 std::map<std::string, Engine::Sprite> Content::sprites{};
 std::vector<MapInfo> Content::maps{};
 
+std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, const std::string &name)
+{
+    Engine::Aseprite aseprite(assets + name);
+
+    std::string n{name.substr(0, name.size() - 4)};
+    auto sprite = Engine::Sprite(name.substr(0, name.size() - 4));
+
+    if (!aseprite.slices.empty())
+    {
+        sprite.pivot = {aseprite.slices[0].pivotX, aseprite.slices[0].pivotY};
+    }
+
+    auto packer = Engine::TexturePacker();
+
+    for (int i = 0; i < aseprite.frames.size(); i++)
+    {
+        auto image = aseprite.frames[i].image;
+        packer.addEntry(i, image.width, image.height, image.pixels);
+    }
+
+    auto texture = packer.pack();
+
+    for (auto &tag : aseprite.tags)
+    {
+        Engine::Animation &anim = sprite.addAnimation();
+        anim.name = tag.name;
+
+        for (int frameIndex = tag.from; frameIndex <= tag.to; frameIndex++)
+        {
+            auto &frame = anim.frames.emplace_back();
+
+            auto &image = aseprite.frames[frameIndex].image;
+            frame.durationMillis = aseprite.frames[frameIndex].duration;
+
+            anim.duration += frame.durationMillis;
+
+            frame.texture = Engine::Subtexture(
+                // TODO: should pack textures into one
+                // Engine::Texture::create(image.width, image.height, (unsigned char *) image.pixels),
+                texture,
+                // TODO check this, they should not be hardcoded
+                *packer.getEntryRect(frameIndex));
+        }
+    }
+    return std::pair{n, std::move(sprite)};
+}
+
 void Content::load()
 {
     sprites.clear();
@@ -28,47 +75,29 @@ void Content::load()
         // Load sprites
         if (name.size() > 4 && name.compare(name.size() - 4, 4, ".ase") == 0)
         {
-            Engine::Aseprite aseprite(assets + name);
+            auto sprite = loadSprite(assets, name);
+            sprites.insert(sprite);
+        }
 
+        if (name.size() > 4 && name.compare(name.size() - 4, 4, ".png") == 0)
+        {
             std::string n{name.substr(0, name.size() - 4)};
             auto sprite = Engine::Sprite(name.substr(0, name.size() - 4));
 
-            if (!aseprite.slices.empty()) {
-                sprite.pivot = {aseprite.slices[0].pivotX, aseprite.slices[0].pivotY};
-            }
+            auto &anim = sprite.addAnimation();
+            anim.duration = 0;
 
-            auto packer = Engine::TexturePacker();
+            auto &frame = anim.frames.emplace_back();
+            frame.durationMillis = 0;
+            auto tex = Engine::Texture::create((assets + name).c_str());
+            frame.texture = Engine::Subtexture(
+                // TODO: should pack textures into one
+                // Engine::Texture::create(image.width, image.height, (unsigned char *) image.pixels),
+                tex,
+                // TODO check this, they should not be hardcoded
+                Engine::Rect(0, 0, tex->getWidth(), tex->getHeight()));
 
-            for (int i = 0; i < aseprite.frames.size(); i++)
-            {
-                auto image = aseprite.frames[i].image;
-                packer.addEntry(i, image.width, image.height, image.pixels);
-            }
-
-            auto texture = packer.pack();
-
-            for (auto &tag : aseprite.tags)
-            {
-                Engine::Animation &anim = sprite.addAnimation();
-                anim.name = tag.name;
-
-                for (int frameIndex = tag.from; frameIndex <= tag.to; frameIndex++)
-                {
-                    auto &frame = anim.frames.emplace_back();
-
-                    auto &image = aseprite.frames[frameIndex].image;
-                    frame.durationMillis = aseprite.frames[frameIndex].duration;
-
-                    frame.texture = Engine::Subtexture(
-                        // TODO: should pack textures into one
-                        //Engine::Texture::create(image.width, image.height, (unsigned char *) image.pixels),
-                        texture,
-                        //TODO check this, they should not be hardcoded
-                        *packer.getEntryRect(frameIndex));
-                    anim.duration += frame.durationMillis;
-                }
-            }
-            sprites.insert(std::pair { n, std::move(sprite) } );
+            sprites.insert({n, sprite});
         }
 
         // Load worlds (map info)
@@ -93,10 +122,12 @@ void Content::load()
         dir = readdir(directory);
     }
 
+    std::cout << "Content loaded successfully" << std::endl;
     closedir(directory);
 }
 
-Engine::Sprite *Content::findSprite(const std::string &name) {
+Engine::Sprite *Content::findSprite(const std::string &name)
+{
     return &sprites.at(name);
 }
 

@@ -112,7 +112,7 @@ namespace Engine
         unsigned char *img = stbi_load(file, &width, &height, &channels, 4);
         if (!img)
             ENGINE_CORE_ERROR("Could not load texture {}", file);
-        auto *tex = new Texture(width, height, (TextureFormat)channels);
+        auto *tex = new Texture(width, height, TextureFormat::RGBA);
         tex->set_data(img);
         stbi_image_free(img);
         return std::shared_ptr<Texture>(tex);

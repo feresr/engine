@@ -76,8 +76,6 @@ Engine::Aseprite::Aseprite(const std::string &path) {
             reader.seekg(chunkSize + chunkStart, std::ios_base::beg);
         }
     }
-
-    std::cout << "frames" << std::endl;
 }
 
 void Engine::Aseprite::parseLayer(std::ifstream &reader) {
