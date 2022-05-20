@@ -38,6 +38,7 @@ namespace Engine
 
         glm::ivec2 position;
         float rotation = 0.0f;
+        glm::vec2 scale = {1.0f, 1.0f};
 
         [[nodiscard]] const std::vector<Component *> &getComponents() const;
 

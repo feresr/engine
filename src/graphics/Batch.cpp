@@ -97,13 +97,25 @@ namespace Engine
 
     void Batch::popMaterial()
     {
-        if (m_material_stack.size() > 0)
+        auto was = m_currentBatch.material;
+
+        // if the current batch has elements (who need the previous material)
+        // then create a new batch
+        if (m_currentBatch.elements > 0)
         {
             m_batches.push_back(m_currentBatch);
-            m_currentBatch.material = m_material_stack.back();
-            m_material_stack.pop_back();
             m_currentBatch.offset += m_currentBatch.elements;
             m_currentBatch.elements = 0;
+        }
+        if (m_material_stack.size() > 0)
+        {
+            auto material = m_material_stack.back();
+            m_material_stack.pop_back();
+            m_currentBatch.material = material;
+        }
+        else
+        {
+            m_currentBatch.material = mDefaultMaterial;
         }
     }
 
@@ -428,7 +440,8 @@ namespace Engine
 
         if (m_currentBatch.flipVertically)
         {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 uvs[i].y = 1.0 - uvs[i].y;
             }
         }
@@ -490,7 +503,8 @@ namespace Engine
         };
         if (m_currentBatch.flipVertically)
         {
-            for (int i = 0; i < 4; i++) {
+            for (int i = 0; i < 4; i++)
+            {
                 uvs[i].y = 1.0 - uvs[i].y;
             }
         }

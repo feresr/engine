@@ -1,5 +1,6 @@
 #pragma once
 #include "Engine.h"
+#include <functional>
 
 class Bird : public Engine::Component
 {
@@ -12,4 +13,9 @@ class Bird : public Engine::Component
     void update() override;
 
     void render(Engine::Batch &batch) override;
+
+    std::function<void(void)> onPipeCrash;
+
+
+    bool dead = false;
 };

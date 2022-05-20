@@ -4,6 +4,72 @@
 
 using namespace Engine;
 
+// convert blend op enum
+GLenum gl_get_blend_func(BlendOp operation)
+{
+    switch (operation)
+    {
+    case BlendOp::Add:
+        return GL_FUNC_ADD;
+    case BlendOp::Subtract:
+        return GL_FUNC_SUBTRACT;
+    case BlendOp::ReverseSubtract:
+        return GL_FUNC_REVERSE_SUBTRACT;
+    case BlendOp::Min:
+        return GL_MIN;
+    case BlendOp::Max:
+        return GL_MAX;
+    };
+    return GL_FUNC_ADD;
+}
+
+GLenum gl_get_blend_factor(BlendFactor factor)
+{
+    switch (factor)
+    {
+    case BlendFactor::Zero:
+        return GL_ZERO;
+    case BlendFactor::One:
+        return GL_ONE;
+    case BlendFactor::SrcColor:
+        return GL_SRC_COLOR;
+    case BlendFactor::OneMinusSrcColor:
+        return GL_ONE_MINUS_SRC_COLOR;
+    case BlendFactor::DstColor:
+        return GL_DST_COLOR;
+    case BlendFactor::OneMinusDstColor:
+        return GL_ONE_MINUS_DST_COLOR;
+    case BlendFactor::SrcAlpha:
+        return GL_SRC_ALPHA;
+    case BlendFactor::OneMinusSrcAlpha:
+        return GL_ONE_MINUS_SRC_ALPHA;
+    case BlendFactor::DstAlpha:
+        return GL_DST_ALPHA;
+    case BlendFactor::OneMinusDstAlpha:
+        return GL_ONE_MINUS_DST_ALPHA;
+    case BlendFactor::ConstantColor:
+        return GL_CONSTANT_COLOR;
+    case BlendFactor::OneMinusConstantColor:
+        return GL_ONE_MINUS_CONSTANT_COLOR;
+    case BlendFactor::ConstantAlpha:
+        return GL_CONSTANT_ALPHA;
+    case BlendFactor::OneMinusConstantAlpha:
+        return GL_ONE_MINUS_CONSTANT_ALPHA;
+    case BlendFactor::SrcAlphaSaturate:
+        return GL_SRC_ALPHA_SATURATE;
+    case BlendFactor::Src1Color:
+        return GL_SRC1_COLOR;
+    case BlendFactor::OneMinusSrc1Color:
+        return GL_ONE_MINUS_SRC1_COLOR;
+    case BlendFactor::Src1Alpha:
+        return GL_SRC1_ALPHA;
+    case BlendFactor::OneMinusSrc1Alpha:
+        return GL_ONE_MINUS_SRC1_ALPHA;
+    };
+
+    return GL_ZERO;
+}
+
 RenderPass::RenderPass()
 {
     blend = BlendMode::Normal;
@@ -191,8 +257,11 @@ void RenderPass::perform()
     // BLEND MODE
     {
         glEnable(GL_BLEND);
-        glBlendFuncSeparate((GLenum)blend.color_src, (GLenum)blend.color_dst, (GLenum)blend.alpha_src, (GLenum)blend.alpha_dst);
-        glBlendEquationSeparate((GLenum) blend.color_op, (GLenum) blend.alpha_op);
+        glBlendEquationSeparate(gl_get_blend_func(blend.color_op), gl_get_blend_func(blend.alpha_op));
+        glBlendFuncSeparate(gl_get_blend_factor(blend.color_src),
+                            gl_get_blend_factor(blend.color_dst),
+                            gl_get_blend_factor(blend.alpha_src),
+                            gl_get_blend_factor(blend.alpha_dst));
     }
 
     // DEPTH FUNCTION

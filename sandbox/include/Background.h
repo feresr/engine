@@ -16,5 +16,4 @@ class Background : public Engine::Component
     private:
     int width, height;
     Engine::Sprite* sky = Content::findSprite("background");
-    Engine::Sprite* base = Content::findSprite("base");
 };
