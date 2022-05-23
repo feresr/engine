@@ -20,9 +20,9 @@ bool Bird::awake()
 }
 void Bird::update()
 {
-    auto *sprite = entity->get<Engine::SpriteComponent>();
-    auto *kinetic = entity->get<KineticComponent>();
-    auto *collider = entity->get<ColliderComponent>();
+    auto *sprite = get<Engine::SpriteComponent>();
+    auto *kinetic = get<KineticComponent>();
+    auto *collider = get<ColliderComponent>();
 
     // flap
     if (!dead && (Engine::Input::pressed(Engine::UP) || Engine::Input::pressed(Engine::W)))
@@ -43,5 +43,5 @@ void Bird::update()
 
 void Bird::render(Engine::Batch &batch)
 {
-    entity->get<Engine::SpriteComponent>()->render(batch);
+    get<Engine::SpriteComponent>()->render(batch);
 }

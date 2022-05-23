@@ -7,14 +7,14 @@ Background::Background(int width, int height) : width{width}, height{height}
 
 bool Background::awake()
 {
-    this->entity->add<Slider>();
+    entity->add<Slider>();
     return true;
 }
 
 void Background::update()
 {
-    if (this->entity->position.x <= -width)
-        this->entity->position.x = 0;
+    if (entity->position.x <= -width)
+        entity->position.x = 0;
 }
 
 void Background::render(Engine::Batch &batch)

@@ -24,8 +24,7 @@ void Pipe::update()
 
 void Pipe::render(Engine::Batch &batch)
 {
-    auto sprite = entity->get<Engine::SpriteComponent>();
-    auto spriteSize = sprite->getCurrentAnimSize();
+    auto spriteSize = get<Engine::SpriteComponent>()->getCurrentAnimSize();
     batch.pushMatrix(Engine::Math::transform({0.0f, 0.0f}, {spriteSize.x / 2.0f, 0.0}, {1.0, 1.0}));
     entity->get<Engine::SpriteComponent>()->render(batch);
     batch.popMatrix();

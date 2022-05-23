@@ -12,58 +12,6 @@ namespace Engine
 
     class Batch;
 
-    class World;
-
-    class Entity
-    {
-
-        friend class World;
-
-    private:
-        bool alive = true;
-
-        std::vector<Component *> components;
-
-        Entity(bool alive, glm::vec2 pos, World *world) : alive{alive}, position{pos}, world{world} {}
-
-        World *world;
-
-    public:
-        World &getWorld()
-        {
-            return *world;
-        }
-
-        std::vector<Component *> &getComponents();
-
-        glm::ivec2 position;
-        float rotation = 0.0f;
-        glm::vec2 scale = {1.0f, 1.0f};
-
-        [[nodiscard]] const std::vector<Component *> &getComponents() const;
-
-        template <typename ComponentType, typename... Args>
-        ComponentType &add(Args &&...arguments);
-
-        void remove(Component *component);
-
-        template <class T>
-        const T *get() const;
-
-        template <class T>
-        T *get();
-
-        std::vector<Component *>::iterator begin()
-        {
-            return components.begin();
-        }
-
-        std::vector<Component *>::iterator end()
-        {
-            return components.end();
-        }
-    };
-
     class World
     {
 
@@ -156,13 +104,6 @@ namespace Engine
     };
 }
 
-template <typename ComponentType, typename... Args>
-ComponentType &Engine::Entity::add(Args &&...arguments)
-{
-    auto *component = new ComponentType(arguments...);
-    return *world->add(this, component);
-}
-
 template <class T>
 T *Engine::World::add(Entity *entity, T *component)
 {
@@ -171,36 +112,10 @@ T *Engine::World::add(Entity *entity, T *component)
 
     component->entity = entity;
     component->type = Component::Types::id<T>();
-    entity->components.emplace_back(component);
+    entity->getComponents().emplace_back(component);
 
     components[component->type].push_back(component);
 
     component->awake();
     return component;
-}
-
-template <class T>
-const T *Engine::Entity::get() const
-{
-    ENGINE_ASSERT(world, "Entity must be assigned to a World");
-    auto type = Component::Types::id<T>();
-    for (auto *component : components)
-    {
-        if (component->type == type)
-            return (T *)component;
-    }
-    return nullptr;
-}
-
-template <class T>
-T *Engine::Entity::get()
-{
-    ENGINE_ASSERT(world, "Entity must be assigned to a World");
-    auto type = Component::Types::id<T>();
-    for (auto *component : components)
-    {
-        if (component->type == type)
-            return (T *)component;
-    }
-    return nullptr;
 }

@@ -18,8 +18,8 @@ bool Floor::awake()
 
 void Floor::update()
 {
-    if (this->entity->position.x <= -width)
-        this->entity->position.x = 0;
+    if (entity->position.x <= -width)
+        entity->position.x = 0;
 }
 
 void Floor::render(Engine::Batch &batch)

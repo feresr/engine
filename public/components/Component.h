@@ -1,12 +1,11 @@
-
 #pragma once
 #include "Log.h"
 #include "glm/glm.hpp"
+#include "Entity.h"
 
 namespace Engine
 {
     class World;
-    class Entity;
     class Batch;
 
     struct Component
@@ -43,6 +42,12 @@ namespace Engine
         Entity *getEntity() const
         {
             return entity;
+        }
+
+        template <class T>
+        T *get()
+        {
+            return entity->get<T>();
         }
 
         class Types

@@ -9,6 +9,8 @@
 #include "time/time.h"
 #include "Ecs.h"
 #include "Component.h"
+#include "Entity.h"
+#include "Entity.hpp"
 #include "Log.h"
 #include "Input.h"
 #include "Content.h"
