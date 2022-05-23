@@ -155,7 +155,7 @@ void Engine::FrameBuffer::clear() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, id);
     glDisable(GL_SCISSOR_TEST);
-    glClearColor(0.0f / 255.0f, 0.0f / 255.0f, 000.0f / 255.0f, 255.0f / 255.0f);
+    glClearColor(0.0f / 255.0f, 0.0f / 255.0f, 0.0f / 255.0f, 255.0f / 255.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 }
 

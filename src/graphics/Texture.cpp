@@ -109,7 +109,7 @@ namespace Engine
     {
         int width, height, channels;
 
-        unsigned char *img = stbi_load(file, &width, &height, &channels, 4);
+        unsigned char *img = stbi_load(file, &width, &height, &channels, STBI_rgb_alpha);
         if (!img)
             ENGINE_CORE_ERROR("Could not load texture {}", file);
         auto *tex = new Texture(width, height, TextureFormat::RGBA);

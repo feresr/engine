@@ -85,6 +85,7 @@ public:
 
     void render() override
     {
+        buffer->clear();
         batch.pushMaterial(material);
         world.render<Background>(batch);
         batch.popMaterial();
@@ -96,7 +97,7 @@ public:
 
         // Render to screen
         auto screenBuffer = Engine::FrameBuffer::BackBuffer();
-        screenBuffer->clear(0xffffff);
+        screenBuffer->clear(0xffffffff);
         glm::vec2 screenCenter = glm::vec2{(float)screenBuffer->width(), (float)screenBuffer->height()} * 0.5f;
         glm::vec2 bufferCenter = glm::vec2{(float)buffer->width(), (float)buffer->height()} * 0.5f;
         glm::vec2 scale = {screenBuffer->width() / (float)buffer->width(), screenBuffer->height() / (float)buffer->height()};

@@ -258,10 +258,7 @@ void RenderPass::perform()
     {
         glEnable(GL_BLEND);
         glBlendEquationSeparate(gl_get_blend_func(blend.color_op), gl_get_blend_func(blend.alpha_op));
-        glBlendFuncSeparate(gl_get_blend_factor(blend.color_src),
-                            gl_get_blend_factor(blend.color_dst),
-                            gl_get_blend_factor(blend.alpha_src),
-                            gl_get_blend_factor(blend.alpha_dst));
+        glBlendFuncSeparate(gl_get_blend_factor(blend.color_src), gl_get_blend_factor(blend.color_dst), gl_get_blend_factor(blend.alpha_src), gl_get_blend_factor(blend.alpha_dst));
     }
 
     // DEPTH FUNCTION

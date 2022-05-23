@@ -103,6 +103,7 @@ namespace Engine
         // then create a new batch
         if (m_currentBatch.elements > 0)
         {
+            m_material_stack.push_back(m_currentBatch.material);
             m_batches.push_back(m_currentBatch);
             m_currentBatch.offset += m_currentBatch.elements;
             m_currentBatch.elements = 0;
@@ -112,9 +113,7 @@ namespace Engine
             auto material = m_material_stack.back();
             m_material_stack.pop_back();
             m_currentBatch.material = material;
-        }
-        else
-        {
+        } else {
             m_currentBatch.material = mDefaultMaterial;
         }
     }

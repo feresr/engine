@@ -4,10 +4,10 @@ using namespace Engine;
 
 const BlendMode BlendMode::Normal = BlendMode(
 	BlendOp::Add,
-	BlendFactor::One,
+	BlendFactor::SrcAlpha,
 	BlendFactor::OneMinusSrcAlpha,
 	BlendOp::Add,
-	BlendFactor::One,
+	BlendFactor::SrcAlpha,
 	BlendFactor::OneMinusSrcAlpha,
 	BlendMask::RGBA,
 	0xffffffff
