@@ -271,7 +271,7 @@ void RenderPass::perform()
 
     // Viewport
     {
-        glViewport(0, 0, viewport.right(), viewport.bottom());
+        glViewport(viewport.x, viewport.y, viewport.w, viewport.h);
     }
 
     // DRAW THE MESH
