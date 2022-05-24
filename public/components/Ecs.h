@@ -66,10 +66,13 @@ namespace Engine
         }
 
         template <typename T>
-        [[nodiscard]] typename std::list<Engine::Component *> componentsOfType() const
+        [[nodiscard]] typename std::list<T *> componentsOfType() const
         {
-            auto type = Component::Types::id<T>();
-            return components[type];
+            const auto &c = components[Component::Types::id<T>()];
+            static auto transform = [](Engine::Component *c) { return (T *)c; };
+            std::list<T *> tl;
+            std::transform(c.begin(), c.end(), std::back_inserter(tl), transform);
+            return tl;
         }
 
         std::list<Entity *>::iterator begin()

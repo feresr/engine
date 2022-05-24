@@ -55,13 +55,12 @@ public:
         auto pipes = world.componentsOfType<Pipe>();
         for (auto pipe : pipes)
         {
-            auto p = (Pipe *)pipe;
-            auto pipeWidth = p->getEntity()->get<Engine::SpriteComponent>()->getCurrentAnimSize().x / 2.0f;
+            auto pipeWidth = pipe->getEntity()->get<Engine::SpriteComponent>()->getCurrentAnimSize().x / 2.0f;
             if (pipe->getEntity()->position.x < -pipeWidth)
                 world.destroyEntity(pipe->getEntity());
         }
 
-        // create new pipess every PIPE_INTERVAL_MS
+        // Create new pipess every PIPE_INTERVAL_MS
         static uint32_t lastTime = 0;
         if (!gameover && Engine::Time::getTime() - lastTime > PIPE_INTERVAL_MS)
         {
@@ -69,10 +68,10 @@ public:
             createPipes();
         }
 
+        // Stop the world on gameover
         world.first<Bird>()->dead = gameover;
-        auto sliders = world.componentsOfType<Slider>();
-        for (auto slider : sliders)
-            ((Slider *)slider)->velocity = gameover ? 0 : 1;
+        for (auto slider : world.componentsOfType<Slider>())
+            slider->velocity = gameover ? 0 : 1;
 
 
         // Reload game
