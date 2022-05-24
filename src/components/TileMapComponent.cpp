@@ -44,10 +44,10 @@ bool TileMapComponent::awake() {
     grid.clear();
     grid.resize(columns * rows);
 
-    auto *collider = entity->get<ColliderComponent>();
+    auto *collider = get<Collider>();
     if (!collider) {
-        collider = &entity->add<ColliderComponent>(columns, rows, 16);
-        collider->mask = ColliderComponent::Mask::SOLID;
+        collider = &entity->add<Collider>(columns, rows, 16);
+        collider->mask = Collider::Mask::SOLID;
     } else {
         collider->clear();
     }
@@ -103,7 +103,6 @@ bool TileMapComponent::awake() {
                     setCell(i, j, sprite);
                 }
             }
-
 
             if (backgroundLayer) {
                 auto backgroundTileId = backgroundLayer->getTiles()[i + j * map.getTileCount().x].ID;

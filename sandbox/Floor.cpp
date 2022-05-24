@@ -10,9 +10,9 @@ bool Floor::awake()
 {
     entity->add<Slider>();
     auto base_texture = base->getAnimation()->frames[0].texture;
-    auto &c = entity->add<ColliderComponent>(Engine::RectI(
+    auto &c = entity->add<Collider>(Engine::RectI(
         0.0, height - base_texture.height(), width * 2, base_texture.height()));
-    c.mask = ColliderComponent::Mask::SOLID;
+    c.mask = Collider::Mask::SOLID;
     return true;
 }
 

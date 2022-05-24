@@ -2,7 +2,7 @@
 
 #include <memory>
 #include "Component.h"
-#include "ColliderComponent.h"
+#include "Collider.h"
 #include "Content.h"
 
 namespace Engine {

@@ -11,8 +11,8 @@ bool Bird::awake()
     rect.y += 6;
     rect.w -= 12;
     rect.h -= 6;
-    auto &c = entity->add<ColliderComponent>(rect);
-    c.mask = ColliderComponent::Mask::SOLID;
+    auto &c = entity->add<Collider>(rect);
+    c.mask = Collider::Mask::SOLID;
     auto &k = entity->add<KineticComponent>();
     k.gravity = 0.25;
     k.collider = &c;
@@ -22,7 +22,7 @@ void Bird::update()
 {
     auto *sprite = get<Engine::SpriteComponent>();
     auto *kinetic = get<KineticComponent>();
-    auto *collider = get<ColliderComponent>();
+    auto *collider = get<Collider>();
 
     // flap
     if (!dead && (Engine::Input::pressed(Engine::UP) || Engine::Input::pressed(Engine::W)))
@@ -34,7 +34,7 @@ void Bird::update()
     if (kinetic->speed.y == 0 && dead)
         entity->rotation = 3.1415f / 2.0f;
 
-    if (!dead && collider->check(ColliderComponent::Mask::ENEMY))
+    if (!dead && collider->check(Collider::Mask::ENEMY))
     {
         onPipeCrash();
         kinetic->speed = {0.0, 1.0f};

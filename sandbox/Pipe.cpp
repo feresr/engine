@@ -8,8 +8,8 @@ bool Pipe::awake()
     entity->add<Slider>();
     auto &s = entity->add<Engine::SpriteComponent>("pipe");
     auto size = s.getCurrentAnimSize();
-    auto &c = entity->add<ColliderComponent>(Engine::RectI(-size.x / 2, 0, size.x, size.y));
-    c.mask = ColliderComponent::Mask::ENEMY;
+    auto &c = entity->add<Collider>(Engine::RectI(-size.x / 2, 0, size.x, size.y));
+    c.mask = Collider::Mask::ENEMY;
     if (top)
     {
         s.scale.y = -1;

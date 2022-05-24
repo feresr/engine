@@ -5,7 +5,7 @@ bool KineticComponent::moveX(int amount) {
     if (amount == 0) return false;
     if (collider) {
         glm::ivec2 offset = glm::vec2{amount, 0};
-        auto *other = collider->check(ColliderComponent::Mask::SOLID, offset);
+        auto *other = collider->check(Collider::Mask::SOLID, offset);
         if (other) {
             int a = amount;
             int sign = glm::sign(amount);
@@ -34,7 +34,7 @@ bool KineticComponent::moveY(int amount) {
     if (amount == 0) return false;
     if (collider) {
         glm::ivec2 offset = glm::ivec2{0, amount};
-        auto *other = collider->check(ColliderComponent::Mask::SOLID, offset);
+        auto *other = collider->check(Collider::Mask::SOLID, offset);
         if (other) {
             int a = amount;
             int sign = glm::sign(amount);
@@ -76,7 +76,7 @@ void KineticComponent::stop() {
 
 bool KineticComponent::onGround(int dist) const {
     if (collider) {
-        return collider->check(ColliderComponent::Mask::SOLID, glm::ivec2{ 0, dist});
+        return collider->check(Collider::Mask::SOLID, glm::ivec2{ 0, dist});
     }
     return false;
 }

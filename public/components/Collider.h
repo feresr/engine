@@ -1,9 +1,10 @@
 #pragma once
 
 #include <rectI.h>
+#include "Collider.h"
 #include "Component.h"
 
-class ColliderComponent : public Engine::Component {
+class Collider : public Engine::Component {
 
 public:
 
@@ -14,13 +15,13 @@ public:
         static constexpr uint32_t ENEMY = 1 << 3;
     };
 
-    explicit ColliderComponent(Engine::RectI &rect);
+    explicit Collider(Engine::RectI &rect);
 
-    explicit ColliderComponent(int columns, int rows, int tileSize);
+    explicit Collider(int columns, int rows, int tileSize);
 
-    bool overlaps(const ColliderComponent &other);
+    bool overlaps(const Collider &other);
 
-    bool overlaps(const ColliderComponent &other, const glm::ivec2 &offset);
+    bool overlaps(const Collider &other, const glm::ivec2 &offset);
 
     void setCell(int x, int y, bool value);
 
@@ -35,11 +36,11 @@ public:
     /*
      * Returns the first collider in the world colliding with [this], nullptr otherwise
      */
-    const ColliderComponent *check(uint32_t mask, const glm::ivec2 &offset = { 0.0, 0.0});
+    const Collider *check(uint32_t mask, const glm::ivec2 &offset = { 0.0, 0.0});
 
     void update() override;
 
-    ~ColliderComponent();
+    ~Collider();
 
     uint32_t mask = Mask::NONE;
 

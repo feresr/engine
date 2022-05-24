@@ -7,6 +7,7 @@
 
 class SandboxApplication : public Engine::Application
 {
+
 private:
     Engine::Batch batch;
     static constexpr int WIDTH = 288;

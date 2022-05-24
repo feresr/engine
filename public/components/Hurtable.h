@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "ColliderComponent.h"
+#include "Collider.h"
 
 namespace Engine {
     class Hurtable : public Component {
@@ -9,11 +9,11 @@ namespace Engine {
 
         void update() override;
 
-        uint32_t hurtBy = ColliderComponent::Mask::NONE;
+        uint32_t hurtBy = Collider::Mask::NONE;
 
         std::function<void(Entity * )> onHurt = nullptr;
 
-        ColliderComponent *collider = nullptr;
+        Collider *collider = nullptr;
     private:
 
 

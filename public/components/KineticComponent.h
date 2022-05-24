@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Component.h"
-#include "ColliderComponent.h"
+#include "Collider.h"
 #include "Utils.h"
 
 class KineticComponent : public Engine::Component {
@@ -18,7 +18,7 @@ public:
     std::function<void(KineticComponent*)> onHitY = nullptr;
     std::function<void(KineticComponent*)> onHitX = nullptr;
 
-    ColliderComponent *collider;
+    Collider *collider;
 
     bool moveX(int amount);
 

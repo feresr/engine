@@ -1,18 +1,18 @@
-#include <ColliderComponent.h>
+#include <Collider.h>
 #include "Batch.h"
 #include "Input.h"
 #include "Ecs.h"
 #include <iostream>
 
-bool ColliderComponent::renderColliders = false;
+bool Collider::renderColliders = false;
 
-ColliderComponent::ColliderComponent(Engine::RectI &rect)
+Collider::Collider(Engine::RectI &rect)
 {
     this->rect = rect;
     kind = Type::Rect;
 }
 
-ColliderComponent::ColliderComponent(int columns, int rows, int tileSize)
+Collider::Collider(int columns, int rows, int tileSize)
 {
     grid.columns = columns;
     grid.rows = rows;
@@ -21,25 +21,25 @@ ColliderComponent::ColliderComponent(int columns, int rows, int tileSize)
     kind = Type::Grid;
 }
 
-const ColliderComponent *ColliderComponent::check(uint32_t mask, const glm::ivec2 &offset)
+const Collider *Collider::check(uint32_t mask, const glm::ivec2 &offset)
 {
-    auto colliders = entity->getWorld().componentsOfType<ColliderComponent>();
+    auto colliders = entity->getWorld().componentsOfType<Collider>();
 
     for (auto *component : colliders)
     {
-        auto *collider = (ColliderComponent *)component;
+        auto *collider = (Collider *)component;
         if (this != collider && collider->mask & mask && this->overlaps(*collider, offset))
             return collider;
     }
     return nullptr;
 }
 
-bool ColliderComponent::overlaps(const ColliderComponent &other)
+bool Collider::overlaps(const Collider &other)
 {
     return overlaps(other, glm::vec2(0.0f, 0.0f));
 }
 
-bool ColliderComponent::overlaps(const ColliderComponent &other, const glm::ivec2 &offset)
+bool Collider::overlaps(const Collider &other, const glm::ivec2 &offset)
 {
     if (this->kind == Type::Rect && other.kind == Type::Rect)
     {
@@ -77,19 +77,19 @@ bool ColliderComponent::overlaps(const ColliderComponent &other, const glm::ivec
     return false;
 }
 
-void ColliderComponent::setCell(int x, int y, bool value)
+void Collider::setCell(int x, int y, bool value)
 {
     ENGINE_ASSERT(kind == Type::Grid, "Incorrect collider type, can't call setCell on a {} type", type);
     grid.values[x + y * grid.columns] = value;
 }
 
-bool ColliderComponent::getCell(int x, int y)
+bool Collider::getCell(int x, int y)
 {
     ENGINE_ASSERT(kind == Type::Grid, "Incorrect collider type, can't call setCell on a {} type", type);
     return grid.values[x + y * grid.columns];
 }
 
-void ColliderComponent::render(Engine::Batch &batch)
+void Collider::render(Engine::Batch &batch)
 {
     if (renderColliders)
     {
@@ -119,21 +119,21 @@ void ColliderComponent::render(Engine::Batch &batch)
     }
 }
 
-void ColliderComponent::update()
+void Collider::update()
 {
 }
 
-void ColliderComponent::clear()
+void Collider::clear()
 {
     memset(grid.values, false, sizeof(bool) * grid.columns * grid.rows);
 }
 
-ColliderComponent::~ColliderComponent()
+Collider::~Collider()
 {
     delete[] grid.values;
 }
 
-void ColliderComponent::setRect(Engine::RectI rect)
+void Collider::setRect(Engine::RectI rect)
 {
     this->rect = rect;
 }
