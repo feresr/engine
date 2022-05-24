@@ -12,8 +12,7 @@ namespace Engine
 
     class Batch;
 
-    class World
-    {
+    class World {
 
     public:
         World();
@@ -66,12 +65,11 @@ namespace Engine
         }
 
         template <typename T>
-        [[nodiscard]] typename std::list<T *> componentsOfType() const
-        {
+        [[nodiscard]] typename std::list<T *> componentsOfType() const {
             const auto &c = components[Component::Types::id<T>()];
             static auto transform = [](Engine::Component *c) { return (T *)c; };
-            std::list<T *> tl;
-            std::transform(c.begin(), c.end(), std::back_inserter(tl), transform);
+            std::list<T *> tl{c.size()};
+            std::transform(c.begin(), c.end(), tl.begin(), transform);
             return tl;
         }
 

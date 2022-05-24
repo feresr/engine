@@ -96,9 +96,7 @@ namespace Engine {
         GLuint instanceBuffer;
         int64_t indexCount;
         int64_t vertexCount;
-        int64_t instanceCount;
         int64_t vertexSize;
-        int64_t instanceSize;
         GLenum mIndexFormat;
         int mIndexSize;
         uint8_t vertexAttribsEnabled;

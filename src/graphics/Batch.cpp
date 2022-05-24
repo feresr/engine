@@ -53,7 +53,7 @@ namespace Engine
             {0, VertexType::Float2, false}, // position
             {1, VertexType::Float2, false}, // uv
             {2, VertexType::UByte4, true},  // color
-            {3, VertexType::UByte4, true},  // type
+            {3, VertexType::UByte4, true},  // type (mult, wash, fill)
         });
 
     Batch::Batch()
@@ -177,7 +177,7 @@ namespace Engine
         if (m_currentBatch.texture != texture)
         {
             m_currentBatch.texture = texture;
-            m_currentBatch.flipVertically = texture->isFramebuffer();
+            m_currentBatch.flipVertically = false;//texture->isFramebuffer();
         }
     }
 

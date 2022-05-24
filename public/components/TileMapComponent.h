@@ -2,6 +2,7 @@
 
 #include <memory>
 #include "Component.h"
+#include "Entity.hpp"
 #include "Collider.h"
 #include "Content.h"
 
@@ -40,6 +41,5 @@ private:
     std::vector<MapObject> objects{};
 
     int rows{}, columns{};
-
 
 };
