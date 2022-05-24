@@ -1,7 +1,7 @@
-#include "components/KineticComponent.h"
+#include "components/Kinetic.h"
 #include "Ecs.h"
 
-bool KineticComponent::moveX(int amount) {
+bool Kinetic::moveX(int amount) {
     if (amount == 0) return false;
     if (collider) {
         glm::ivec2 offset = glm::vec2{amount, 0};
@@ -30,7 +30,7 @@ bool KineticComponent::moveX(int amount) {
     return false;
 }
 
-bool KineticComponent::moveY(int amount) {
+bool Kinetic::moveY(int amount) {
     if (amount == 0) return false;
     if (collider) {
         glm::ivec2 offset = glm::ivec2{0, amount};
@@ -59,22 +59,22 @@ bool KineticComponent::moveY(int amount) {
     return false;
 }
 
-void KineticComponent::stopX() {
+void Kinetic::stopX() {
     speed.x = 0;
     remainder.x = 0;
 }
 
-void KineticComponent::stopY() {
+void Kinetic::stopY() {
     speed.y = 0;
     remainder.y = 0;
 }
 
-void KineticComponent::stop() {
+void Kinetic::stop() {
     stopX();
     stopY();
 }
 
-bool KineticComponent::onGround(int dist) const {
+bool Kinetic::onGround(int dist) const {
     if (collider) {
         return collider->check(Collider::Mask::SOLID, glm::ivec2{ 0, dist});
     }
@@ -82,10 +82,10 @@ bool KineticComponent::onGround(int dist) const {
 }
 
 
-void KineticComponent::render(Engine::Batch &batch) {
+void Kinetic::render(Engine::Batch &batch) {
 }
 
-void KineticComponent::update() {
+void Kinetic::update() {
     // apply friction
     if (!onGround()) {
         speed.y += gravity;

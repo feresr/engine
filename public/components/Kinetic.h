@@ -4,7 +4,7 @@
 #include "Collider.h"
 #include "Utils.h"
 
-class KineticComponent : public Engine::Component {
+class Kinetic : public Engine::Component {
 private:
 
 public:
@@ -15,8 +15,8 @@ public:
     float gravity = 0.35f;
     float friction = 0.15;
 
-    std::function<void(KineticComponent*)> onHitY = nullptr;
-    std::function<void(KineticComponent*)> onHitX = nullptr;
+    std::function<void(Kinetic*)> onHitY = nullptr;
+    std::function<void(Kinetic*)> onHitX = nullptr;
 
     Collider *collider;
 

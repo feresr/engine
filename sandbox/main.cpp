@@ -80,7 +80,7 @@ public:
         {
             gameover = false;
             world.first<Bird>()->position().y = HEIGHT / 2;
-            world.first<Bird>()->getEntity()->get<KineticComponent>()->speed.y = -5.0f;
+            world.first<Bird>()->get<Kinetic>()->speed.y = -5.0f;
         }
     }
 

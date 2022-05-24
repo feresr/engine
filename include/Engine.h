@@ -18,7 +18,7 @@
 
 // Components
 #include "SpriteComponent.h"
-#include "KineticComponent.h"
+#include "Kinetic.h"
 #include "CameraComponent.h"
 #include "TileMapComponent.h"
 #include "Hurtable.h"

@@ -13,7 +13,7 @@ bool Bird::awake()
     rect.h -= 6;
     auto &c = entity->add<Collider>(rect);
     c.mask = Collider::Mask::SOLID;
-    auto &k = entity->add<KineticComponent>();
+    auto &k = entity->add<Kinetic>();
     k.gravity = 0.25;
     k.collider = &c;
     return true;
@@ -21,7 +21,7 @@ bool Bird::awake()
 void Bird::update()
 {
     auto *sprite = get<Engine::SpriteComponent>();
-    auto *kinetic = get<KineticComponent>();
+    auto *kinetic = get<Kinetic>();
     auto *collider = get<Collider>();
 
     // flap
