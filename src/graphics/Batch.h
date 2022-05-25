@@ -92,7 +92,7 @@ namespace Engine
 
         void tex(const Subtexture &sprite, const glm::vec2 &position, const Color &color);
 
-        // void line(const glm::vec2& from, const glm::vec2& to, float t, Color color);
+        void line(const glm::vec2& from, const glm::vec2& to, float t, Color color);
 
         // void line(const glm::vec2& from, const glm::vec2& to, float t, Color fromColor, Color toColor);
 

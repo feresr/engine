@@ -113,7 +113,9 @@ namespace Engine
             auto material = m_material_stack.back();
             m_material_stack.pop_back();
             m_currentBatch.material = material;
-        } else {
+        }
+        else
+        {
             m_currentBatch.material = mDefaultMaterial;
         }
     }
@@ -177,7 +179,7 @@ namespace Engine
         if (m_currentBatch.texture != texture)
         {
             m_currentBatch.texture = texture;
-            m_currentBatch.flipVertically = false;//texture->isFramebuffer();
+            m_currentBatch.flipVertically = false; // texture->isFramebuffer();
         }
     }
 
@@ -520,6 +522,19 @@ namespace Engine
             p->wash = wash;
             p->fill = 0;
         }
+    }
+
+    void Batch::line(const glm::vec2 &from, const glm::vec2 &to, float t, Color color)
+    {
+        glm::vec2 tangent = glm::normalize(to - from);
+        glm::vec2 normal = glm::vec2(tangent.y, -tangent.x);
+
+        const glm::vec2 pos1 = glm::vec2{from.x + (normal * t).x * 0.5, from.y + (normal * t).y * 0.5};
+        const glm::vec2 pos2 = glm::vec2{from.x - (normal * t).x * 0.5, from.y - (normal * t).y * 0.5};
+        const glm::vec2 pos3 = glm::vec2{to.x - (normal * t).x * 0.5, to.y - (normal * t).y * 0.5};
+        const glm::vec2 pos4 = glm::vec2{to.x + (normal * t).x * 0.5, to.y + (normal * t).y * 0.5};
+
+        quad(pos1, pos2, pos3, pos4, color);
     }
 
     void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale)
