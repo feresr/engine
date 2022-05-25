@@ -524,6 +524,53 @@ namespace Engine
         }
     }
 
+    void Batch::circle(const glm::vec2 &center, float radius, int steps, Color color)
+    {
+        ENGINE_ASSERT(steps >= 3, "Circle must have at least 3 steps");
+        const float advance = glm::two_pi<float>() / steps;
+
+        glm::vec2 last = {center.x + radius * cos(0), center.y + radius * sin(0)};
+        for (int i = 1; i <= steps; i++)
+        {
+            glm::vec2 next = {center.x + radius * cos(advance * i), center.y + radius * sin(advance * i)};
+            tri(center, last, next, color);
+            last = next;
+        }
+    }
+
+    void Batch::tri(glm::vec2 pos0, glm::vec2 pos1, glm::vec2 pos2, Color color)
+    {
+        // one triangle
+        m_currentBatch.elements += 1;
+
+        // Add 6 indices to m_indices
+        m_indices.reserve(m_indices.size() + 3);
+
+        m_indices.push_back(m_vertices.size() + 0);
+        m_indices.push_back(m_vertices.size() + 1);
+        m_indices.push_back(m_vertices.size() + 2);
+
+        // Add 4 vertices (make sure to use the matrix)
+        // Resize m_vertices to have 4 additial spaces [..., _, _, _, _]
+        m_vertices.resize(m_vertices.size() + 3);
+
+        // [..., _, _, _, _]
+        //                ^ m_vertices.back()
+        //   ^ m_vertices.back() - 3
+        auto *p = &m_vertices.back() - 3;
+        const glm::vec2 *positions[3] = {&pos0, &pos1, &pos2};
+        for (auto &position : positions)
+        {
+            ++p;
+            p->position = m_matrix * glm::vec3(*position, 1.0);
+            p->color = color;
+            p->texture = glm::vec2(0.0f, 0.0f);
+            p->wash = 255;
+            p->fill = 255;
+            p->mult = 0;
+        }
+    }
+
     void Batch::line(const glm::vec2 &from, const glm::vec2 &to, float t, Color color)
     {
         glm::vec2 tangent = glm::normalize(to - from);

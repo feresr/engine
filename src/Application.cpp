@@ -32,7 +32,7 @@ Engine::Application::Application(std::string name, int width, int height, bool f
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
         SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-        Uint32 flags = fullScreen ? SDL_WINDOW_ALLOW_HIGHDPI | SDL_WINDOW_FULLSCREEN : SDL_WINDOW_ALLOW_HIGHDPI;
+        Uint32 flags = fullScreen ? SDL_WINDOW_FULLSCREEN : 0;
         window = SDL_CreateWindow(appName.c_str(),
                                   SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
                                   width, height,

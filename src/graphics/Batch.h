@@ -94,9 +94,11 @@ namespace Engine
 
         void line(const glm::vec2& from, const glm::vec2& to, float t, Color color);
 
+        void tri(glm::vec2 pos0, glm::vec2 pos1, glm::vec2 pos2, Color color);
+
         // void line(const glm::vec2& from, const glm::vec2& to, float t, Color fromColor, Color toColor);
 
-        // void circle(const glm::vec2& center, float radius, int steps, Color color);
+        void circle(const glm::vec2& center, float radius, int steps, Color color);
 
         // void circle(const glm::vec2& center, float radius, int steps, Color center_color, Color outer_color);
 
