@@ -73,12 +73,12 @@ namespace Engine
             return tl;
         }
 
-        std::list<Entity *>::iterator begin()
+        std::vector<Entity *>::iterator begin()
         {
             return entities.begin();
         }
 
-        std::list<Entity *>::iterator end()
+        std::vector<Entity *>::iterator end()
         {
             return entities.end();
         }
@@ -86,7 +86,7 @@ namespace Engine
     private:
         static constexpr int MAX_COMPONENTS = 256;
 
-        std::list<Entity *> entities{};
+        std::vector<Entity *> entities{};
 
         // When adding a component to an entity, the component is stored
         // both in the entity and in 'components[]' for faster iteration* over the same type of component, see: World:add()
@@ -97,7 +97,7 @@ namespace Engine
         // "World" owns these pointers and is in charge of deallocating them
         // todo: would be nice to make this a vector of Components and not Components* so as to have them packed in
         //  contiguous memory. For now this should do
-        std::list<Component *> components[MAX_COMPONENTS];
+        std::vector<Component *> components[MAX_COMPONENTS];
 
         void destroyComponent(Component *component);
 

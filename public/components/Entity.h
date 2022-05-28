@@ -27,6 +27,8 @@ namespace Engine
             return *world;
         }
 
+        void destroy();
+
         std::vector<Component *> &getComponents();
 
         glm::ivec2 position;

@@ -179,7 +179,7 @@ namespace Engine
         if (m_currentBatch.texture != texture)
         {
             m_currentBatch.texture = texture;
-            m_currentBatch.flipVertically = false; // texture->isFramebuffer();
+            m_currentBatch.flipVertically = texture->isFramebuffer();
         }
     }
 
@@ -207,7 +207,7 @@ namespace Engine
 
     void Batch::render(const std::shared_ptr<Engine::FrameBuffer> &target)
     {
-        auto ortho = glm::ortho(0.0f, (float)target->width(), 0.0f, (float)target->height());
+        auto ortho = glm::ortho(0.0f, (float)target->width(), (float)target->height(), 0.0f);
         render(target, ortho);
     }
 
@@ -379,12 +379,20 @@ namespace Engine
         //   ^ m_vertices.back() - 4
         auto *p = &m_vertices.back() - 4;
         const glm::vec2 *positions[4] = {&pos0, &pos1, &pos2, &pos3};
+        glm::vec2 uvs[4]{
+            {0.0f, 0.0f},
+            {1.0f, 0.0f},
+            {1.0f, 1.0f},
+            {0.0f, 1.0f},
+        };
+        uint8_t uvi = 0;
         for (auto &position : positions)
         {
             ++p;
             p->position = m_matrix * glm::vec3(*position, 1.0);
             p->color = color;
-            p->texture = glm::vec2(0.0f, 0.0f);
+            p->texture = uvs[uvi];
+            uvi++;
             p->wash = 255;
             p->fill = 255;
             p->mult = 0;

@@ -1,6 +1,12 @@
 #include "Entity.h"
 #include "Entity.hpp"
 
+void Engine::Entity::destroy() {
+    // todo: maybe this should be "marked for destroy"
+    // and get removed only after the world is done updating / rendering
+    world->destroyEntity(this);
+}
+
 std::vector<Engine::Component *> &Engine::Entity::getComponents()
 {
     return components;

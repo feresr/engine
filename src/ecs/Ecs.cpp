@@ -26,7 +26,14 @@ void Engine::World::destroyEntity(Engine::Entity *entity)
         component = next;
     }
     entity->world = nullptr;
-    entities.remove(entity);
+    entity->alive = false;
+
+    for (auto e = entities.begin(); e != entities.end(); e++) {
+        if (*e == entity) {
+            entities.erase(e);
+            break;
+        }
+    }
     delete entity;
 }
 
@@ -59,14 +66,11 @@ Engine::World::~World()
 
 void Engine::World::clear()
 {
-    auto iter = entities.begin();
-    while (iter != entities.end())
-    {
-        destroyEntity(*iter++);
-        // learning cpp: adding iter++ on this line causes a bug
-        // destroy entity removes the entity from the list and invalidates the iterator
-        // jumping to the next element fixes the problem
-        // since you are now pointing to the next element in the list
+    // todo: this makes a copy of entities to be able to iterate and modify concurrently (not good)
+    // use std_ptr and RAII to fix this mess.
+    auto ent = entities;
+    for (auto *e : ent) {
+        destroyEntity(e);
     }
 }
 
@@ -74,7 +78,7 @@ void Engine::World::destroyComponent(Engine::Component *component)
 {
     auto type = component->type;
 
-    std::list<Component *> &all = components[type];
+    std::vector<Component *> &all = components[type];
     for (auto i = all.begin(); i != all.end(); i++)
     {
         if (*i == component)
