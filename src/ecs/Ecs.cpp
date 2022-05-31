@@ -28,8 +28,10 @@ void Engine::World::destroyEntity(Engine::Entity *entity)
     entity->world = nullptr;
     entity->alive = false;
 
-    for (auto e = entities.begin(); e != entities.end(); e++) {
-        if (*e == entity) {
+    for (auto e = entities.begin(); e != entities.end(); e++)
+    {
+        if (*e == entity)
+        {
             entities.erase(e);
             break;
         }
@@ -41,14 +43,11 @@ void Engine::World::update()
 {
     for (size_t typeIndex = 0; typeIndex < Component::Types::count(); typeIndex++)
     {
-        auto &componentArray = components[typeIndex];
-        auto component = componentArray.begin();
-        while (component != componentArray.end())
+        for (int i = components[typeIndex].size() - 1; i >= 0; i--)
         {
-            auto next = std::next(component, 1);
-            if ((*component)->active && (*component)->entity->alive)
-                (*component)->update();
-            component = next;
+            auto *component = components[typeIndex][i];
+            if (component->active && component->entity->alive)
+                component->update();
         }
     }
 }
@@ -66,12 +65,8 @@ Engine::World::~World()
 
 void Engine::World::clear()
 {
-    // todo: this makes a copy of entities to be able to iterate and modify concurrently (not good)
-    // use std_ptr and RAII to fix this mess.
-    auto ent = entities;
-    for (auto *e : ent) {
-        destroyEntity(e);
-    }
+    for (int i = entities.size() - 1; i >= 0; i--)
+        destroyEntity(entities[i]);
 }
 
 void Engine::World::destroyComponent(Engine::Component *component)
