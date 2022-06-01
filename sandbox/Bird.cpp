@@ -34,8 +34,7 @@ void Bird::update()
     if (kinetic->speed.y == 0 && dead)
         entity->rotation = 3.1415f / 2.0f;
 
-    if (!dead && collider->check(Collider::Mask::ENEMY))
-    {
+    if (!dead && collider->check(Collider::Mask::ENEMY)) {
         onPipeCrash();
         kinetic->speed = {0.0, 1.0f};
     }

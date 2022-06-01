@@ -30,21 +30,28 @@ public:
 
         world.addEntity({0.0f, 0.0f})->add<Background>(WIDTH, HEIGHT);
         world.addEntity({0.0f, 0.0f})->add<Floor>(WIDTH, HEIGHT);
-        world.addEntity({80.0f, HEIGHT / 2.0f})->add<Bird>().onPipeCrash = [=]() { gameover = true; };
+        world.addEntity({80.0f, HEIGHT / 2.0f})->add<Bird>().onPipeCrash = [=]()
+        { gameover = true; };
     }
 
     void createPipes()
     {
         static constexpr int MIN_GAP_SIZE = 40;
         // top
-        auto pipe = &world.addEntity({0.0f, 0.0f})->add<Pipe>(false);
-        pipe->getEntity()->position.y = (HEIGHT / 2.0f - 30.f) + (MIN_GAP_SIZE + rand() % 100);
-        pipe->getEntity()->position.x = WIDTH + pipe->getEntity()->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
+        {
+            auto pipe = world.addEntity({0.0f, 0.0f});
+            pipe->add<Pipe>(false);
+            pipe->position.y = (HEIGHT / 2.0f - 30.f) + (MIN_GAP_SIZE + rand() % 100);
+            pipe->position.x = WIDTH + pipe->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
+        }
 
         // bottom
-        pipe = &world.addEntity({WIDTH * 2.0, 0.0f})->add<Pipe>(true);
-        pipe->getEntity()->position.y = (HEIGHT / 2.0f - 30.f) - (MIN_GAP_SIZE + rand() % 100);
-        pipe->getEntity()->position.x = WIDTH + pipe->getEntity()->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
+        {
+            auto pipe = world.addEntity({0.0f, 0.0f});
+            pipe->add<Pipe>(true);
+            pipe->position.y = (HEIGHT / 2.0f - 30.f) - (MIN_GAP_SIZE + rand() % 100);
+            pipe->position.x = WIDTH + pipe->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
+        }
     }
 
     void update() override
@@ -72,7 +79,6 @@ public:
         world.first<Bird>()->dead = gameover;
         for (auto slider : world.componentsOfType<Slider>())
             slider->velocity = gameover ? 0 : 1;
-
 
         // Reload game
         if (Engine::Input::pressed(Engine::R))
