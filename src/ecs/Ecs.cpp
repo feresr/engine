@@ -8,9 +8,8 @@
 // WORLD
 Engine::Entity *Engine::World::addEntity(glm::vec2 position)
 {
-    auto *entity = new Entity{true, position, this};
-    entities.push_back(entity);
-    return entity;
+    entities.push_back(Entity::create(true, position, this));
+    return entities.back();
 }
 
 void Engine::World::destroyEntity(Engine::Entity *entity)

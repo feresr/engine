@@ -18,6 +18,10 @@ namespace Engine
 
         Entity(bool alive, glm::vec2 pos, World *world) : alive{alive}, position{pos}, world{world} {}
 
+        static Entity* create(bool alive, glm::vec2 pos, World* world) {
+            return new Entity(alive, pos, world);
+        }
+
         World *world;
 
     public:
