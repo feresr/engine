@@ -15,23 +15,13 @@ Engine::Entity *Engine::World::addEntity(glm::vec2 position)
 void Engine::World::destroyEntity(Engine::Entity *entity)
 {
     ENGINE_ASSERT(entity->world == this, "Entity does not belong to this world")
-
     auto &components = entity->getComponents();
-    auto component = components.begin();
-    while (component != components.end())
-    {
-        auto next = std::next(component, 1);
-        destroyComponent(*component);
-        component = next;
-    }
-    entity->world = nullptr;
-    entity->alive = false;
-
-    for (auto e = entities.begin(); e != entities.end(); e++)
-    {
-        if (*e == entity)
+    for (int i = components.size() - 1; i >= 0; i--)
+        destroyComponent(components[i]);
+    for (int i = entities.size() - 1; i >= 0; i--) {
+        if (entities[i] == entity)
         {
-            entities.erase(e);
+            entities.erase(entities.begin() + i);
             break;
         }
     }
