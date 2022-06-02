@@ -24,11 +24,14 @@ void Engine::SpriteComponent::play(const std::string &animationName)
         this->animationName = animationName;
     }
 }
+void Engine::SpriteComponent::setColor(Engine::Color color) {
+    this->color = color;
+}
 
 void Engine::SpriteComponent::render(Engine::Batch &batch) {
     auto &texture = getAnimation()->frames[frameIndex].texture;
-    batch.pushMatrix(Engine::Math::transform(entity->position, getSprite()->pivot, scale, entity->rotation));
-    batch.tex(texture, glm::vec2(0), Engine::Color(0xffffff));
+    batch.pushMatrix(Engine::Math::transform(entity->position, getSprite()->pivot, scale, rotation));
+    batch.tex(texture, glm::vec2(0), color);
     batch.popMatrix();
 }
 

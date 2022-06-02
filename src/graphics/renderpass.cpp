@@ -133,11 +133,10 @@ void RenderPass::perform()
     }
 
     // Validate Scissor
-    // TODO: wtf are Scissors?
     if (this->has_scissor)
         scissor = scissor.overlap_rect(Rect(0, 0, targetDimensions.x, targetDimensions.y));
 
-    // perform render
+    // -- Perform render --
     // bind FrameBuffer
     target->bind();
 
@@ -262,11 +261,16 @@ void RenderPass::perform()
     }
 
     // DEPTH FUNCTION
-    {}
+    {
+        glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_ALWAYS);
+    }
 
     // CULL MODE
     {
-
+        // glEnable(GL_CULL_FACE);
+        // glCullFace(GL_BACK);
+        // glFrontFace(GL_CW);
     }
 
     // Viewport

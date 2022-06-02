@@ -5,14 +5,14 @@ Pipe::Pipe(bool top) : top{top} {}
 
 bool Pipe::awake()
 {
-    entity->add<Slider>();
-    auto &s = entity->add<Engine::SpriteComponent>("pipe");
+    add<Slider>();
+    auto &s = add<Engine::SpriteComponent>("pipe");
     auto size = s.getCurrentAnimSize();
-    auto &c = entity->add<Collider>(Engine::RectI(-size.x / 2, 0, size.x, size.y));
+    auto &c = add<Collider>(Engine::RectI(-size.x / 2, 0, size.x, size.y));
     c.mask = Collider::Mask::ENEMY;
     if (top)
     {
-        s.scale.y = -1;
+        s.scale.y = -1.00;
         c.setRect(Engine::RectI(-size.x / 2, -size.y, size.x, size.y));
     }
     return true;

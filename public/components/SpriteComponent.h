@@ -2,6 +2,7 @@
 
 #include <string>
 #include "Component.h"
+#include "Color.h"
 
 namespace Engine {
 
@@ -13,6 +14,9 @@ namespace Engine {
     public:
         SpriteComponent() = delete;
 
+        glm::vec2 scale = {1.0f, 1.0f};
+        float rotation = 0.0f;
+
         explicit SpriteComponent(const std::string &sprite);
 
         void play(const std::string &animation);
@@ -21,9 +25,10 @@ namespace Engine {
 
         void update() override;
 
-        glm::vec2 scale{1.0f, 1.0f};
 
         int getCurrentAnimDuration();
+
+        void setColor(Engine::Color color);
 
         // todo: getCurrentAnimSize doesn't work becaue the packer packs alpha values
         glm::ivec2 getCurrentAnimSize();
@@ -39,5 +44,7 @@ namespace Engine {
 
         Engine::Sprite* getSprite();
         Engine::Animation* getAnimation();
+
+        Engine::Color color = 0xffffff;
     };
 }

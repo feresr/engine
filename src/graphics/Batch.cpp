@@ -117,7 +117,7 @@ namespace Engine
         else
         {
             // or the default one if empty
-            m_currentBatch.material = mDefaultMaterial;
+            m_currentBatch.material = nullptr;
         }
     }
 
@@ -272,7 +272,7 @@ namespace Engine
 
     void Batch::render_single_batch(RenderPass &pass, const Batch::DrawBatch &b, const glm::mat4x4 &matrix)
     {
-        pass.material = b.material; // how to render
+        pass.material = b.material;
         if (!pass.material)
             pass.material = mDefaultMaterial;
 

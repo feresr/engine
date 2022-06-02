@@ -50,6 +50,11 @@ namespace Engine
             return entity->get<T>();
         }
 
+        template <class T, class... Args>
+        T& add(Args &&...arguments) {
+            return entity->add<T>(arguments...);
+        }
+
         class Types
         {
 
