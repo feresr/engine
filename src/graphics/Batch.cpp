@@ -99,23 +99,24 @@ namespace Engine
     {
         auto was = m_currentBatch.material;
 
-        // if the current batch has elements (who need the previous material)
+        // If the current batch has elements (who will need the previous material)
         // then create a new batch
         if (m_currentBatch.elements > 0)
         {
-            m_material_stack.push_back(m_currentBatch.material);
             m_batches.push_back(m_currentBatch);
             m_currentBatch.offset += m_currentBatch.elements;
             m_currentBatch.elements = 0;
         }
         if (m_material_stack.size() > 0)
         {
+            // get the previous material from the stack,
             auto material = m_material_stack.back();
             m_material_stack.pop_back();
             m_currentBatch.material = material;
         }
         else
         {
+            // or the default one if empty
             m_currentBatch.material = mDefaultMaterial;
         }
     }

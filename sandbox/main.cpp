@@ -37,11 +37,12 @@ public:
     void createPipes()
     {
         static constexpr int MIN_GAP_SIZE = 40;
+        static constexpr int Y_OFFSET = 30.0f;
         // top
         {
             auto pipe = world.addEntity({0.0f, 0.0f});
             pipe->add<Pipe>(false);
-            pipe->position.y = (HEIGHT / 2.0f - 30.f) + (MIN_GAP_SIZE + rand() % 100);
+            pipe->position.y = (HEIGHT / 2.0f - Y_OFFSET) + (MIN_GAP_SIZE + rand() % 100);
             pipe->position.x = WIDTH + pipe->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
         }
 
@@ -49,7 +50,7 @@ public:
         {
             auto pipe = world.addEntity({0.0f, 0.0f});
             pipe->add<Pipe>(true);
-            pipe->position.y = (HEIGHT / 2.0f - 30.f) - (MIN_GAP_SIZE + rand() % 100);
+            pipe->position.y = (HEIGHT / 2.0f - Y_OFFSET) - (MIN_GAP_SIZE + rand() % 100);
             pipe->position.x = WIDTH + pipe->get<Engine::SpriteComponent>()->getCurrentAnimSize().x;
         }
     }
@@ -95,10 +96,12 @@ public:
         batch.pushMaterial(material);
         world.render<Background>(batch);
         batch.popMaterial();
+        batch.pushBlend(Engine::BlendMode::Normal);
         world.render<Pipe>(batch);
         world.render<Bird>(batch);
         world.render<Floor>(batch);
         batch.render(buffer);
+        batch.popBlend();
         batch.clear();
 
         // Render to screen
