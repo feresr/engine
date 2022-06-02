@@ -18,13 +18,8 @@ void Engine::World::destroyEntity(Engine::Entity *entity)
     auto &components = entity->getComponents();
     for (int i = components.size() - 1; i >= 0; i--)
         destroyComponent(components[i]);
-    for (int i = entities.size() - 1; i >= 0; i--) {
-        if (entities[i] == entity)
-        {
-            entities.erase(entities.begin() + i);
-            break;
-        }
-    }
+
+    entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
     delete entity;
 }
 

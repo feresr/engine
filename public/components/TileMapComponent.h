@@ -13,6 +13,10 @@ namespace Engine {
 struct MapObject {
     int x, y;
     std::string type;
+
+    bool operator<(const MapObject& other) const {
+        return this->type < other.type;
+    }
 };
 
 class TileMapComponent : public Engine::Component {

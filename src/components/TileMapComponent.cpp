@@ -7,32 +7,35 @@
 #include <tmxlite/Layer.hpp>
 #include <Content.h>
 
-TileMapComponent::TileMapComponent(const MapInfo* mapInfo) : mapInfo{mapInfo} {}
+TileMapComponent::TileMapComponent(const MapInfo *mapInfo) : mapInfo{mapInfo} {}
 
-void TileMapComponent::setCell(unsigned int x, unsigned int y, const Engine::Subtexture &sprite) {
+void TileMapComponent::setCell(unsigned int x, unsigned int y, const Engine::Subtexture &sprite)
+{
     grid[x + y * columns] = sprite;
 }
 
-void TileMapComponent::render(Engine::Batch &batch) {
+void TileMapComponent::render(Engine::Batch &batch)
+{
     batch.pushMatrix(glm::mat3x2{1.0f, 0.0f, 0.0f, 1.0f, entity->position.x, entity->position.y});
-    for (int i = 0; i < columns; i++) {
-        for (int j = 0; j < rows; j++) {
+    for (int i = 0; i < columns; i++)
+    {
+        for (int j = 0; j < rows; j++)
+        {
             batch.tex(
-                    grid[i + j * columns],
-                    glm::vec2{
-                            (float) i * grid[i + j * columns].width(),
-                            (float) j * grid[i + j * columns].height()
-                    },
-                    Engine::Color(0xFFFFFF)
-            );
+                grid[i + j * columns],
+                glm::vec2{
+                    (float)i * grid[i + j * columns].width(),
+                    (float)j * grid[i + j * columns].height()},
+                Engine::Color(0xFFFFFF));
         }
     }
     batch.popMatrix();
 }
 
-
-bool TileMapComponent::awake() {
-    if (!mapInfo) return false;
+bool TileMapComponent::awake()
+{
+    if (!mapInfo)
+        return false;
     tmx::Map map;
     map.load(mapInfo->fileName);
 
@@ -45,10 +48,13 @@ bool TileMapComponent::awake() {
     grid.resize(columns * rows);
 
     auto *collider = get<Collider>();
-    if (!collider) {
+    if (!collider)
+    {
         collider = &entity->add<Collider>(columns, rows, 16);
         collider->mask = Collider::Mask::SOLID;
-    } else {
+    }
+    else
+    {
         collider->clear();
     }
 
@@ -60,72 +66,77 @@ bool TileMapComponent::awake() {
     tmx::TileLayer *backgroundLayer = nullptr;
 
     // Fetch layers
-    for (auto &layer : map.getLayers()) {
-        if (layer->getName() == "Solid") {
+    for (auto &layer : map.getLayers())
+    {
+        if (layer->getName() == "Solid")
+        {
             solidLayer = &layer->getLayerAs<tmx::TileLayer>();
         }
 
-        if (layer->getName() == "Background") {
+        if (layer->getName() == "Background")
+        {
             backgroundLayer = &layer->getLayerAs<tmx::TileLayer>();
         }
 
-        if (layer->getType() == tmx::Layer::Type::Object) {
+        if (layer->getType() == tmx::Layer::Type::Object)
+        {
             tmx::ObjectGroup *objectGroup = nullptr;
             objectGroup = &layer->getLayerAs<tmx::ObjectGroup>();
             objects.reserve(objectGroup->getObjects().size());
-            for (auto &object : objectGroup->getObjects()) {
+            for (auto &object : objectGroup->getObjects())
+            {
                 objects.push_back(
-                        MapObject{
-                                entity->position.x + (int) object.getPosition().x,
-                                entity->position.y + (int) object.getPosition().y,
-                                object.getType()
-                        }
-                );
+                    MapObject{
+                        entity->position.x + (int)object.getPosition().x,
+                        entity->position.y + (int)object.getPosition().y,
+                        object.getType()});
             }
         }
     }
 
-    for (int i = 0; i < map.getTileCount().x; i++) {
-        for (int j = 0; j < map.getTileCount().y; j++) {
-            if (solidLayer) {
+    for (int i = 0; i < map.getTileCount().x; i++)
+    {
+        for (int j = 0; j < map.getTileCount().y; j++)
+        {
+            if (solidLayer)
+            {
                 auto tileId = solidLayer->getTiles()[i + j * map.getTileCount().x].ID;
                 auto tile = tileSet.getTile(tileId);
-                if (tile) {
+                if (tile)
+                {
                     collider->setCell(i, j, true);
                     auto sprite = Engine::Subtexture(
-                            texture,
-                            Engine::Rect(
-                                    {(float) tile->imagePosition.x, (float) tile->imagePosition.y},
-                                    {tile->imageSize.x, tile->imageSize.y}
-                            )
-                    );
+                        texture,
+                        Engine::Rect(
+                            {(float)tile->imagePosition.x, (float)tile->imagePosition.y},
+                            {tile->imageSize.x, tile->imageSize.y}));
 
                     setCell(i, j, sprite);
                 }
             }
 
-            if (backgroundLayer) {
+            if (backgroundLayer)
+            {
                 auto backgroundTileId = backgroundLayer->getTiles()[i + j * map.getTileCount().x].ID;
                 auto tile = tileSet.getTile(backgroundTileId);
-                if (tile) {
+                if (tile)
+                {
                     auto sprite = Engine::Subtexture(
-                            texture,
-                            Engine::Rect(
-                                    {(float) tile->imagePosition.x, (float) tile->imagePosition.y},
-                                    {tile->imageSize.x, tile->imageSize.y}
-                            )
-                    );
+                        texture,
+                        Engine::Rect(
+                            {(float)tile->imagePosition.x, (float)tile->imagePosition.y},
+                            {tile->imageSize.x, tile->imageSize.y}));
                     setCell(i, j, sprite);
                 }
             }
         }
     }
+    // Sort objects by type. Helps the batcher to issue drawcalls with the same texture
+    std::sort(objects.begin(), objects.end());
     return true;
 }
 
-Engine::RectI TileMapComponent::bounds() const {
-    return Engine::RectI(
-            entity->position, {columns * 16, rows * 16}
-    );
+Engine::RectI TileMapComponent::bounds() const
+{
+    return Engine::RectI( entity->position, {columns * 16, rows * 16});
 }
-
