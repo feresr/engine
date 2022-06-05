@@ -39,10 +39,10 @@ namespace Engine
 
         [[nodiscard]] const std::vector<Component *> &getComponents() const;
 
+        void remove(Component *component);
+
         template <typename ComponentType, typename... Args>
         ComponentType &add(Args &&...arguments);
-
-        void remove(Component *component);
 
         template <class T>
         const T *get() const;
