@@ -29,7 +29,6 @@ namespace Engine {
 
         SDL_Window* window{};
 
-        Engine::World world{};
 
     protected:
 

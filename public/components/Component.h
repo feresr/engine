@@ -21,12 +21,10 @@ namespace Engine
 
         Component()
         {
-            ENGINE_CORE_INFO("Component created");
         };
 
         ~Component()
         {
-            ENGINE_CORE_INFO("Component destroyed");
         }
 
         virtual bool awake();

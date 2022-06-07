@@ -49,6 +49,7 @@ Engine::World::~World()
 
 void Engine::World::clear()
 {
+    ENGINE_CORE_INFO("Clearing world, entities: {}", entities.size());
     for (int i = entities.size() - 1; i >= 0; i--)
         destroyEntity(entities[i]);
 }

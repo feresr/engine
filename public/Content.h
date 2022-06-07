@@ -23,6 +23,8 @@ class Content
 public:
     static void load();
 
+    static std::vector<MapInfo> getMaps();
+
     static Engine::Sprite *findSprite(const std::string &name);
 
     static MapInfo *findMapInfo(const glm::ivec2 &position);

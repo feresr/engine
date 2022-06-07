@@ -126,6 +126,9 @@ void Content::load()
     closedir(directory);
 }
 
+std::vector<MapInfo> Content::getMaps() {
+    return maps;
+}
 Engine::Sprite *Content::findSprite(const std::string &name)
 {
     return &sprites.at(name);
