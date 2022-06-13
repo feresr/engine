@@ -14,8 +14,6 @@ namespace Engine {
         std::function<void(Entity * )> onHurt = nullptr;
 
         Collider *collider = nullptr;
-    private:
-
 
     };
 }

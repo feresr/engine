@@ -22,9 +22,7 @@ std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, con
     auto sprite = Engine::Sprite(name.substr(0, name.size() - 4));
 
     if (!aseprite.slices.empty())
-    {
         sprite.pivot = {aseprite.slices[0].pivotX, aseprite.slices[0].pivotY};
-    }
 
     auto packer = Engine::TexturePacker();
 
@@ -36,6 +34,15 @@ std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, con
 
     auto texture = packer.pack();
 
+    // If there are no tags, just get the first frame...
+    if (aseprite.tags.empty()) {
+        Engine::Animation &anim = sprite.addAnimation();
+        anim.name = n;
+        auto &frame = anim.frames.emplace_back();
+        frame.texture = Engine::Subtexture(texture, *packer.getEntryRect(0));
+    }
+
+    // else 
     for (auto &tag : aseprite.tags)
     {
         Engine::Animation &anim = sprite.addAnimation();
@@ -68,6 +75,10 @@ void Content::load()
     auto assets = std::string{Engine::Application::path()}.append("assets/");
     auto directory = opendir(assets.c_str());
     dirent *dir = readdir(directory);
+    if (!dir) {
+        ENGINE_CORE_ERROR("Could not find assets folder {}", assets);
+        return;
+    }
     while (dir != nullptr)
     {
         std::string name{dir->d_name};
@@ -110,7 +121,7 @@ void Content::load()
             for (auto &it : j)
             {
                 MapInfo &mp = maps.emplace_back();
-                mp.fileName = it.at("fileName").get<std::string>();
+                mp.fileName = assets + it.at("fileName").get<std::string>();
                 mp.rect = Engine::RectI(
                     it.at("x").get<int>(),
                     it.at("y").get<int>(),
@@ -122,7 +133,6 @@ void Content::load()
         dir = readdir(directory);
     }
 
-    std::cout << "Content loaded successfully" << std::endl;
     closedir(directory);
 }
 

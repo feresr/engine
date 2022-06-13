@@ -12,6 +12,7 @@ public:
         static constexpr uint32_t NONE = 1 << 0;
         static constexpr uint32_t SOLID = 1 << 1;
         static constexpr uint32_t PLAYER_ATTACK = 1 << 2;
+        static constexpr uint32_t COLLECTIBLE = 1 << 2;
         static constexpr uint32_t ENEMY = 1 << 3;
     };
 

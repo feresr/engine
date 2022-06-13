@@ -11,7 +11,6 @@ namespace Engine {
         int durationMillis;
     };
 
-
     struct Animation {
         std::string name;
         std::vector<Frame> frames;

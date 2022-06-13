@@ -4,6 +4,7 @@
 
 #include "Ecs.h"
 #include "Batch.h"
+#include "iostream"
 
 // WORLD
 Engine::Entity *Engine::World::addEntity(glm::vec2 position)
@@ -16,8 +17,13 @@ void Engine::World::destroyEntity(Engine::Entity *entity)
 {
     ENGINE_ASSERT(entity->world == this, "Entity does not belong to this world")
     auto &components = entity->getComponents();
-    for (int i = components.size() - 1; i >= 0; i--)
+    std::cout << "deleting entity @" << entity << "component count: " << components.size() << std::endl;
+     
+    for (int32_t i = components.size() - 1; i >= 0; i--)
+    {
+        std::cout << i << std::endl;
         destroyComponent(components[i]);
+    }
 
     entities.erase(std::remove(entities.begin(), entities.end(), entity), entities.end());
     delete entity;

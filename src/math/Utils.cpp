@@ -24,7 +24,7 @@ namespace Engine::Math
     }
 
     glm::mat3x2 transform(const glm::vec2 &position, const glm::vec2 &origin, const glm::vec2 &scale, float radians) {
-        auto matrix = glm::mat3x2{1.0, 0.0, 0.0, 1.0, 0.0, 0.0};
+        auto matrix = glm::mat3x2{1.0, 0.0, 0.0, 1.0, 1.0, 1.0};
 
         if (origin.x != 0 || origin.y != 0)
         {
@@ -33,10 +33,7 @@ namespace Engine::Math
         }
         if (scale.x != 1 || scale.y != 1)
         {
-            glm::mat3x2 transform{
-                scale.x, 0.0f,
-                0.0f, scale.y,
-                0.0f, 0.0f};
+            glm::mat3x2 transform{ scale.x, 0.0f, 0.0f, scale.y, 0.0f, 0.0f};
             matrix = transform * glm::mat3x3(matrix);
         }
         
@@ -63,4 +60,13 @@ namespace Engine::Math
         return transform(position, origin, scale, 0.0f);
     }
 
+    glm::mat3x2 scale(glm::vec2 scale) {
+        auto matrix = glm::mat3x2{1.0, 0.0, 0.0, 1.0, 1.0, 1.0};
+        if (scale.x != 1 || scale.y != 1)
+        {
+            glm::mat3x2 transform{ scale.x, 0.0f, 0.0f, scale.y, 0.0f, 0.0f};
+            matrix = transform * glm::mat3x3(matrix);
+        }
+        return matrix;
+    }
 }

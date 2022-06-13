@@ -37,6 +37,7 @@ bool TileMapComponent::awake()
     if (!mapInfo)
         return false;
     tmx::Map map;
+    ENGINE_INFO("Loading map: {}", mapInfo->fileName);
     map.load(mapInfo->fileName);
 
     entity->position.x = mapInfo->rect.left();
