@@ -101,7 +101,6 @@ void Engine::Application::run() {
         // Poll system events
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (event.type == SDL_KEYUP && event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) isRunning = false;
             if (event.type == SDL_QUIT) isRunning = false;
             handleEvent(event);
         }

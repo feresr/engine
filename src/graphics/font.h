@@ -27,6 +27,7 @@ namespace Engine
 
         const Engine::Character &getCharacter(const char *text) const;
         int getAdvance(int ch1, int ch2) const;
+        int getWidth(const char* text) const;
 
         int ascent, descent, lineGap;
     private:

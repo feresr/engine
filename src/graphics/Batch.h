@@ -102,8 +102,11 @@ namespace Engine
 
         // void circle(const glm::vec2& center, float radius, int steps, Color center_color, Color outer_color);
 
+        enum TextAlign { LEFT, CENTERED };
         void str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color);
         void str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale);
+        void str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale, TextAlign align);
+
 
     private:
         struct Vertex

@@ -3,6 +3,7 @@
 #include "Batch.h"
 #include "imgui.h"
 #include "iostream"
+#include "Utils.h"
 #include "DefaultShader.h"
 
 namespace Engine
@@ -552,12 +553,18 @@ namespace Engine
         quad(pos1, pos2, pos3, pos4, color);
     }
 
-    void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale)
+    void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale, TextAlign align)
     {
+        auto offset = 0.0f;
+        if (align == TextAlign::CENTERED) { offset = font.getWidth(text.c_str()) / 2.0f; }
+        pushMatrix(Engine::Math::transform(
+            position + glm::vec2{0.0f, font.ascent + font.descent},
+            {offset, 0.0f},
+            glm::vec2{scale, scale}));
+
         auto txt = text.c_str();
         float x = 0;
         float y = 0;
-        pushMatrix(glm::mat3x2{scale, 0.0, 0.0, scale, position.x, position.y + font.ascent + font.descent});
 
         while (*txt)
         {
@@ -568,10 +575,17 @@ namespace Engine
             x += font.getAdvance(*txt, *(txt + 1)); // next character space
             ++txt;
         }
+
         popMatrix();
     }
+
     void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color)
     {
         str(font, text, position, color, 1.0f);
+    }
+
+    void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale)
+    {
+        str(font, text, position, color, 1.0f, TextAlign::LEFT);
     }
 }

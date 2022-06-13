@@ -11,7 +11,7 @@ namespace Engine
     Font::Font(const std::string &path, int pixel_height = 8)
     {
         // Find and read .ttf file
-        auto assets = std::string{Application::path()}.append(path);
+        auto assets = std::string{Application::path()}.append("assets/").append(path);
         auto ptr = SDL_RWFromFile(assets.c_str(), "rb"); // rb = read + binary
         auto size = SDL_RWsize(ptr);
         std::vector<uint8_t> ttf_buffer;
@@ -90,5 +90,17 @@ namespace Engine
         int advance = characters.at(ch1).advance;
         int kern = stbtt_GetCodepointKernAdvance(static_cast<stbtt_fontinfo *>(font.get()), ch1, ch2);
         return advance + kern;
+    }
+
+    int Engine::Font::getWidth(const char* text) const {
+        auto txt = text;
+        float width = 0;
+        while (*txt) {
+            auto character = getCharacter(txt);
+            width += character.offset_x; // this character left padding
+            width += getAdvance(*txt, *(txt + 1)); // next character space
+            ++txt;
+        }
+        return width;
     }
 }
