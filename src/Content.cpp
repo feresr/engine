@@ -67,18 +67,35 @@ std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, con
     }
     return std::pair{n, std::move(sprite)};
 }
+// Returns the path to the /assets/ folder
+std::string Content::path() {
+    std::filesystem::path app { Engine::Application::path() };
+    app /= "assets";
+    auto directory = opendir(app.c_str());
+    int depth = 0;
+    while(!directory && depth < 20) {
+        app = app.parent_path().parent_path();
+        app /= "assets";
+        directory = opendir(app.c_str());
+        depth++;
+    }
+    if (!directory) {
+        ENGINE_CORE_ERROR("Could not find 'assets' directory...");
+        return nullptr;
+    }
+    closedir(directory);
+    auto assetsPath = std::string { app.c_str() };
+    return assetsPath.append("/");
+}
 
 void Content::load()
 {
     sprites.clear();
     maps.clear();
-    auto assets = std::string{Engine::Application::path()}.append("assets/");
+    auto assets = path();
+    ENGINE_INFO(assets.c_str());
     auto directory = opendir(assets.c_str());
     dirent *dir = readdir(directory);
-    if (!dir) {
-        ENGINE_CORE_ERROR("Could not find assets folder {}", assets);
-        return;
-    }
     while (dir != nullptr)
     {
         std::string name{dir->d_name};

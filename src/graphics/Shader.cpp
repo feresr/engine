@@ -2,17 +2,18 @@
 #include "Log.h"
 #include <fstream>
 #include "Application.h"
+#include "Content.h"
 
 using namespace Engine;
 
 std::shared_ptr<Shader> Shader::create(const std::string &vertexPath, const std::string &fragmentPath)
 {
     std::string vertexSource;
-    auto assets = std::string{Engine::Application::path()}.append(vertexPath);
+    auto assets = Content::path().append(vertexPath);
     std::getline(std::ifstream(assets), vertexSource, '\0');
 
     std::string fragmentSource;
-    assets = std::string{Engine::Application::path()}.append(fragmentPath);
+    assets = Content::path().append(fragmentPath);
     std::getline(std::ifstream(assets), fragmentSource, '\0');
 
     const Engine::ShaderData shader_data = {vertexSource, fragmentSource};

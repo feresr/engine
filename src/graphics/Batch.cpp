@@ -553,30 +553,32 @@ namespace Engine
         quad(pos1, pos2, pos3, pos4, color);
     }
 
-    void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color, float scale, TextAlign align)
-    {
-        auto offset = 0.0f;
-        if (align == TextAlign::CENTERED) { offset = font.getWidth(text.c_str()) / 2.0f; }
-        pushMatrix(Engine::Math::transform(
-            position + glm::vec2{0.0f, font.ascent + font.descent},
-            {offset, 0.0f},
-            glm::vec2{scale, scale}));
+    void Batch::str(const Engine::Font &font, const std::string &text,
+                    const glm::vec2 &position, const Color &color, float scale,
+                    TextAlign align) {
 
-        auto txt = text.c_str();
-        float x = 0;
-        float y = 0;
+      auto offset = 0.0f;
+      if (align == TextAlign::CENTERED) {
+        offset = font.getWidth(text.c_str()) / 2.0f;
+      }
+      pushMatrix(Engine::Math::transform(
+          position + glm::vec2{0.0f, font.ascent + font.descent},
+          {offset, 0.0f}, glm::vec2{scale, scale}));
 
-        while (*txt)
-        {
-            auto character = font.getCharacter(txt);
-            x += character.offset_x; // this character left padding
-            y = character.offset_y;
-            tex(character.texture, glm::vec2{x, y}, color);
-            x += font.getAdvance(*txt, *(txt + 1)); // next character space
-            ++txt;
-        }
+      auto txt = text.c_str();
+      float x = 0;
+      float y = 0;
 
-        popMatrix();
+      while (*txt) {
+        auto character = font.getCharacter(txt);
+        x += character.offset_x; // this character left padding
+        y = character.offset_y;
+        tex(character.texture, glm::vec2{x, y}, color);
+        x += font.getAdvance(*txt, *(txt + 1)); // next character space
+        ++txt;
+      }
+
+      popMatrix();
     }
 
     void Batch::str(const Engine::Font &font, const std::string &text, const glm::vec2 &position, const Color &color)

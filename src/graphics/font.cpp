@@ -1,6 +1,8 @@
 #include "font.h"
-#include "Application.h"
+#include "Content.h"
 #include "TexturePacker.h"
+#include <SDL.h>
+#include "Log.h"
 
 #define STB_TRUETYPE_IMPLEMENTATION
 #include "stb/stb_truetype.h"
@@ -11,7 +13,7 @@ namespace Engine
     Font::Font(const std::string &path, int pixel_height = 8)
     {
         // Find and read .ttf file
-        auto assets = std::string{Application::path()}.append("assets/").append(path);
+        auto assets = Content::path().append(path);
         auto ptr = SDL_RWFromFile(assets.c_str(), "rb"); // rb = read + binary
         auto size = SDL_RWsize(ptr);
         std::vector<uint8_t> ttf_buffer;
