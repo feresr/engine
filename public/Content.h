@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Content.h"
 #include <memory>
 #include <sstream>
 #include "rectI.h"
@@ -24,6 +23,10 @@ public:
     static void load();
 
     static std::string path();
+    static void playMusic();
+    static void playSound();
+    static void playSoundHit();
+    static void playSoundJump();
 
     static std::vector<MapInfo> getMaps();
 

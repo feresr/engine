@@ -11,7 +11,8 @@
 #include "Input.h"
 
 Engine::Application *Engine::Application::instance = nullptr;
-Engine::Application::Application(std::string name, int width, int height, bool fullScreen) : appName{std::move(name)} {
+Engine::Application::Application(std::string name, int width, int height, bool fullScreen) : appName{std::move(name)}
+{
 
     // Init platform
     {
@@ -21,7 +22,8 @@ Engine::Application::Application(std::string name, int width, int height, bool f
 
         ENGINE_CORE_INFO("SDL v{:d}.{:d}.{:d}", major, version.minor, version.patch);
 
-        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
+        if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
+        {
             SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
             return;
         }
@@ -38,7 +40,8 @@ Engine::Application::Application(std::string name, int width, int height, bool f
                                   width, height,
                                   flags | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 
-        if (!window) {
+        if (!window)
+        {
             SDL_Log("Unable to create window SDL: %s", SDL_GetError());
             SDL_Quit();
             return;
@@ -59,49 +62,58 @@ Engine::Application::Application(std::string name, int width, int height, bool f
     {
         context = SDL_GL_CreateContext(window);
 
-        if (context == nullptr) ENGINE_ERROR("Failed to create OpenGL context: {}", SDL_GetError());
+        if (context == nullptr)
+            ENGINE_ERROR("Failed to create OpenGL context: {}", SDL_GetError());
         SDL_GL_MakeCurrent(window, context);
-        if (!gladLoadGL()) std::cout << "Failed to initialize GLAD" << std::endl;
+        if (!gladLoadGL())
+            std::cout << "Failed to initialize GLAD" << std::endl;
 
-        //TODO: add a debug callback
+        // TODO: add a debug callback
 
         ENGINE_CORE_INFO(
-                "OpenGL {}, {}",
-                glGetString(GL_VERSION),
-                glGetString(GL_RENDERER)
-        );
+            "OpenGL {}, {}",
+            glGetString(GL_VERSION),
+            glGetString(GL_RENDERER));
     }
     // Init ImGui
     {
-            IMGUI_CHECKVERSION();
-            ImGui::CreateContext();
-            ImGuiIO& io = ImGui::GetIO(); (void) io;
-            ImGui::StyleColorsDark();
-            ImGui_ImplSDL2_InitForOpenGL(window,context);
-            const char* glslversion = "#version 330";
-            ImGui_ImplOpenGL3_Init(glslversion);
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        ImGui::StyleColorsDark();
+        ImGui_ImplSDL2_InitForOpenGL(window, context);
+        const char *glslversion = "#version 330";
+        ImGui_ImplOpenGL3_Init(glslversion);
     }
+
     Content::load();
 }
 
-Engine::Application::~Application() {
+Engine::Application::~Application()
+{
     SDL_GL_DeleteContext(context);
-    if (window) SDL_DestroyWindow(window);
+    if (window)
+        SDL_DestroyWindow(window);
     window = nullptr;
     SDL_Quit();
     ENGINE_INFO("GAME CLEANED");
 }
 
-void Engine::Application::run() {
+void Engine::Application::run()
+{
     uint32_t frameStart, frameTime;
 
-    while (isRunning) {
+    while (isRunning)
+    {
         frameStart = SDL_GetTicks();
 
         // Poll system events
-        while (SDL_PollEvent(&event)) {
+        while (SDL_PollEvent(&event))
+        {
             ImGui_ImplSDL2_ProcessEvent(&event);
-            if (event.type == SDL_QUIT) isRunning = false;
+            if (event.type == SDL_QUIT)
+                isRunning = false;
             handleEvent(event);
         }
         // Start the Dear ImGui frame
@@ -116,7 +128,8 @@ void Engine::Application::run() {
         // present
         SDL_GL_SwapWindow(window);
         frameTime = SDL_GetTicks() - frameStart;
-        if (frameTime < FRAME_DURATION + Engine::Time::pauseTimer) {
+        if (frameTime < FRAME_DURATION + Engine::Time::pauseTimer)
+        {
             SDL_Delay(FRAME_DURATION - frameTime + Engine::Time::pauseTimer);
             Engine::Time::pauseTimer = 0;
         }
@@ -131,9 +144,9 @@ void Engine::Application::run() {
         ImGui_ImplSDL2_Shutdown();
         ImGui::DestroyContext();
     }
-
 }
 
-const char *Engine::Application::path() {
+const char *Engine::Application::path()
+{
     return SDL_GetBasePath();
 }

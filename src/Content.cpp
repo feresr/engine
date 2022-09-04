@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include "Application.h"
 #include <json/json.h>
+#include <SDL_mixer.h>
 
 #include "TexturePacker.h"
 #include "fstream"
@@ -35,14 +36,15 @@ std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, con
     auto texture = packer.pack();
 
     // If there are no tags, just get the first frame...
-    if (aseprite.tags.empty()) {
+    if (aseprite.tags.empty())
+    {
         Engine::Animation &anim = sprite.addAnimation();
         anim.name = n;
         auto &frame = anim.frames.emplace_back();
         frame.texture = Engine::Subtexture(texture, *packer.getEntryRect(0));
     }
 
-    // else 
+    // else
     for (auto &tag : aseprite.tags)
     {
         Engine::Animation &anim = sprite.addAnimation();
@@ -67,25 +69,71 @@ std::pair<std::string, Engine::Sprite> loadSprite(const std::string &assets, con
     }
     return std::pair{n, std::move(sprite)};
 }
+
 // Returns the path to the /assets/ folder
-std::string Content::path() {
-    std::filesystem::path app { Engine::Application::path() };
+std::string Content::path()
+{
+    std::filesystem::path app{Engine::Application::path()};
     app /= "assets";
     auto directory = opendir(app.c_str());
     int depth = 0;
-    while(!directory && depth < 20) {
+    while (!directory && depth < 20)
+    {
         app = app.parent_path().parent_path();
         app /= "assets";
         directory = opendir(app.c_str());
         depth++;
     }
-    if (!directory) {
+    if (!directory)
+    {
         ENGINE_CORE_ERROR("Could not find 'assets' directory...");
         return nullptr;
     }
     closedir(directory);
-    auto assetsPath = std::string { app.c_str() };
+    auto assetsPath = std::string{app.c_str()};
     return assetsPath.append("/");
+}
+
+void Content::playSoundJump()
+{
+
+    static auto path = Content::path().append("/jump.wav");
+    static Mix_Chunk *gHigh = Mix_LoadWAV(path.c_str());
+    Mix_PlayChannel(-1, gHigh, 0);
+}
+void Content::playSoundHit()
+{
+
+    static auto path = Content::path().append("/hit.wav");
+    static Mix_Chunk *gHigh = Mix_LoadWAV(path.c_str());
+    Mix_PlayChannel(-1, gHigh, 0);
+}
+void Content::playMusic()
+{
+    // Init Music
+    // Initialize SDL_mixer
+    static bool audio = false;
+    if (!audio) {
+        if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 256) == -1)
+        {
+            return;
+        }
+        audio = true;
+    }
+
+    static bool playing = false;
+    if (playing) return;
+    std::cout << "Playing music" << std::endl;
+    static auto path = Content::path().append("/music.mp3");
+    static Mix_Music *gHigh = Mix_LoadMUS(path.c_str());
+    Mix_PlayMusic(gHigh, -1);
+    playing = true;
+}
+void Content::playSound()
+{
+    static auto path = Content::path().append("/coin.wav");
+    static Mix_Chunk *gHigh = Mix_LoadWAV(path.c_str());
+    Mix_PlayChannel(-1, gHigh, 0);
 }
 
 void Content::load()
@@ -106,6 +154,8 @@ void Content::load()
             auto sprite = loadSprite(assets, name);
             sprites.insert(sprite);
         }
+
+        // Load sound
 
         if (name.size() > 4 && name.compare(name.size() - 4, 4, ".png") == 0)
         {
@@ -153,7 +203,8 @@ void Content::load()
     closedir(directory);
 }
 
-std::vector<MapInfo> Content::getMaps() {
+std::vector<MapInfo> Content::getMaps()
+{
     return maps;
 }
 Engine::Sprite *Content::findSprite(const std::string &name)
